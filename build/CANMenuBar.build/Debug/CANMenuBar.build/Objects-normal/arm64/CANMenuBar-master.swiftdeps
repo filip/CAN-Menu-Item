@@ -1,0 +1,11 @@
+version: "Apple Swift version 5.7.2 (swiftlang-5.7.2.135.5 clang-1400.0.29.51)"
+options: "a249702235e85263a28a49445bfa42749c5fff7f53815655656bb69e33f76294"
+build_start_time: [1772102154, 628638982]
+build_end_time: [1772102156, 884035110]
+inputs:
+  "/Users/filip/Claude/CAN-Menu-Item/Sources/APIClient.swift": [1772100825, 879231452]
+  "/Users/filip/Claude/CAN-Menu-Item/Sources/AppDelegate.swift": [1772102036, 11747837]
+  "/Users/filip/Claude/CAN-Menu-Item/Sources/AppState.swift": [1772101326, 252046823]
+  "/Users/filip/Claude/CAN-Menu-Item/Sources/KeychainHelper.swift": [1772100831, 286883592]
+  "/Users/filip/Claude/CAN-Menu-Item/Sources/SettingsView.swift": [1772100842, 745247364]
+  "/Users/filip/Claude/CAN-Menu-Item/Sources/main.swift": [1772102039, 160158395]

@@ -1,0 +1,56 @@
+{
+  "source": "/Users/filip/Claude/CAN-Menu-Item/Sources/SettingsView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Credentials"
+      },
+      {
+        "comment": "",
+        "key": "Polling"
+      },
+      {
+        "comment": "",
+        "key": "Generate at creativeapplications.net › Edit Profile › App Password"
+      },
+      {
+        "comment": "",
+        "key": "Username"
+      },
+      {
+        "comment": "",
+        "key": "your_username"
+      },
+      {
+        "comment": "",
+        "key": "App Password"
+      },
+      {
+        "comment": "",
+        "key": "xxxx xxxx xxxx xxxx xxxx xxxx"
+      },
+      {
+        "comment": "",
+        "key": "Refresh every"
+      },
+      {
+        "comment": "",
+        "key": ""
+      },
+      {
+        "comment": "",
+        "key": "1 minute"
+      },
+      {
+        "comment": "",
+        "key": "%lld minutes"
+      },
+      {
+        "comment": "",
+        "key": "Save"
+      }
+    ]
+  },
+  "version": 1
+}
