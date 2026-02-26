@@ -83,4 +83,4 @@ After building, add the app to **System Settings → General → Login Items**.
 
 ## API
 
-This app uses the [CAN Member API](CAN-API.md). See `CAN-API.md` for full documentation.
+This app uses the [CAN Member API](https://www.creativeapplications.net/api/). See link for full documentation.
