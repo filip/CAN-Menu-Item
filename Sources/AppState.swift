@@ -75,12 +75,6 @@ final class AppState: ObservableObject {
     func openActivityFeedAndReset() {
         NSWorkspace.shared.open(URL(string: "https://www.creativeapplications.net/activity/")!)
         newPostCount = 0
-
-        // Stamp visit on server (fetch without silent=1)
-        let (u, p) = (username, appPassword)
-        Task {
-            _ = try? await api.fetchActivityLogs(username: u, password: p, perPage: 1, silent: false)
-        }
     }
 
     // MARK: - Timer (call on main thread)

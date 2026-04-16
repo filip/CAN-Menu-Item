@@ -1,10 +1,5 @@
 import Foundation
 
-struct ActivityLog: Decodable {
-    let id: Int
-    let dateGmt: String
-}
-
 struct MemberProfile: Decodable {
     let lastActivityVisit: TimeInterval?
     let newActivityCount: Int?
@@ -51,30 +46,4 @@ struct APIClient {
         return try JSONDecoder().decode(MemberProfile.self, from: data)
     }
 
-    func fetchActivityLogs(
-        username: String,
-        password: String,
-        perPage: Int,
-        silent: Bool
-    ) async throws -> [ActivityLog] {
-        var components = URLComponents(string: "\(base)/wp/v2/activity-logs")!
-        var queryItems = [URLQueryItem(name: "per_page", value: "\(perPage)")]
-        if silent {
-            queryItems.append(URLQueryItem(name: "silent", value: "1"))
-        }
-        components.queryItems = queryItems
-
-        var req = URLRequest(url: components.url!)
-        req.setValue(authHeader(username: username, password: password), forHTTPHeaderField: "Authorization")
-        req.setValue(APIClient.appUserAgent, forHTTPHeaderField: "User-Agent")
-
-        let (data, response) = try await URLSession.shared.data(for: req)
-        if let http = response as? HTTPURLResponse, http.statusCode != 200 {
-            throw APIError.httpError(http.statusCode)
-        }
-
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        return try decoder.decode([ActivityLog].self, from: data)
-    }
 }
