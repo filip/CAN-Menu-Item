@@ -29,6 +29,13 @@ struct SettingsView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .padding(.leading, 118)
+                        .fixedSize(horizontal: false, vertical: true)
+                    if let error = appState.lastError {
+                        Text(error)
+                            .font(.caption)
+                            .foregroundStyle(.red)
+                            .padding(.leading, 118)
+                    }
                 }
                 .padding(8)
             }

@@ -22,8 +22,9 @@ Provides quick access to the CAN activity feed, notifications, and social intera
 
 - Use `MenuBarExtra` (macOS 13+) for the menu bar presence
 - Store credentials securely in the macOS **Keychain** — never in UserDefaults or files
-- Use `silent=1` query param when background-polling to avoid clearing the user's "last visited" indicator on the website
-- On startup, fetch own member profile (`/can/v1/member/{username}`) to sync the `lastActivityVisit` baseline
+- New-post count comes from `newActivityCount` in the member profile API (`/can/v1/member/{username}`) — do NOT compute it locally from feed logs or `lastActivityVisit`
+- Use `silent=1` when stamping the server visit on click-through (feeds the `fetchActivityLogs` call in `openActivityFeedAndReset`)
+- The profile endpoint is the only polling call — no feed fetch needed for count
 
 ## API
 
@@ -35,7 +36,7 @@ Key endpoints used by this app:
 - `GET /wp/v2/activity-logs` — main feed (supports `filter`, `page`, `per_page`, `silent`)
 - `GET /can/v1/mentions` — unread mentions
 - `POST /can/v1/mark-mentions-read` — mark mentions read
-- `GET /can/v1/member/{username}` — own profile + `lastActivityVisit`
+- `GET /can/v1/member/{username}` — own profile + `newActivityCount` (primary poll target)
 - `POST /can/v1/toggle-like` — like/unlike
 - `POST /can/v1/activity-comment` — post comment
 - `GET /can/v1/activity-thread/{id}` — full thread

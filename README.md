@@ -69,7 +69,7 @@ open build/CANMenuBar.app
 
 ## How It Works
 
-On startup the app fetches your `lastActivityVisit` timestamp from the CAN member API. Every N minutes it silently polls the activity feed (`?silent=1`) and counts entries newer than that timestamp. When you click through to the feed, it fetches once without `silent=1` to update the server-side timestamp, keeping the website's own new-content indicator in sync.
+Every N minutes the app calls the CAN member profile API (`/can/v1/member/{username}`) and reads `newActivityCount` directly — the same value shown on the website dot and iOS app. No local date comparison, no feed polling. When you click through to the feed, it fetches once without `silent=1` to stamp `last_activity_visit` on the server, keeping all clients in sync.
 
 Credentials are authenticated via [CAN App Passwords](https://www.creativeapplications.net) (HTTP Basic Auth). Your App Password is stored in the macOS Keychain and never written to disk.
 
@@ -83,4 +83,20 @@ After building, add the app to **System Settings → General → Login Items**.
 
 ## API
 
-This app uses the [CAN Member API](https://www.creativeapplications.net/api/). See link for full documentation.
+This app uses the [CAN Member API](CAN-API.md). See `CAN-API.md` for full documentation.
+
+---
+
+## Version History
+
+### v1.1 (build 2) — 2026-04-16
+- New-post count now reads `newActivityCount` directly from the member profile API — same source of truth as the website dot and iOS app. Eliminates local date comparison and feed polling for count.
+- Fixed: count was always 0 due to server `last_activity_visit` timestamp being stored in local time instead of UTC (`current_time('timestamp')` → `time()` on server).
+- Added app icon — light grey background with menu-app glyph.
+- User agent updated to `Activity OSX Menu Item/{version} ({build})`.
+
+### v1.0 (build 1) — initial release
+- Menu bar new-post counter with configurable refresh interval.
+- Silent background polling via `?silent=1`.
+- Credentials stored in macOS Keychain.
+- Click to open activity feed and reset counter.

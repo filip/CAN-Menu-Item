@@ -11,7 +11,6 @@ final class AppState: ObservableObject {
     private(set) var appPassword: String = ""
     private(set) var refreshIntervalMinutes: Int = 5
 
-    private var lastActivityVisit: TimeInterval = 0
     private var timer: Timer?
     private let api = APIClient()
 
@@ -34,7 +33,6 @@ final class AppState: ObservableObject {
         persistSettings()
 
         newPostCount = 0
-        lastActivityVisit = 0
         stopTimer()
 
         if hasCredentials {
@@ -42,18 +40,13 @@ final class AppState: ObservableObject {
         }
     }
 
-    // Syncs lastActivityVisit baseline from server, then starts polling
+    // Syncs count from server, then starts polling
     func initialize() async {
-        let (u, p) = await MainActor.run { (self.username, self.appPassword) }
-        if let visit = try? await api.fetchLastActivityVisit(username: u, password: p) {
-            await MainActor.run { self.lastActivityVisit = visit }
-        }
         await poll()
         await MainActor.run { self.startTimer() }
     }
 
     func poll() async {
-        // Atomically check and set isLoading on main thread
         let shouldProceed = await MainActor.run { () -> Bool in
             guard !self.isLoading, self.hasCredentials else { return false }
             self.isLoading = true
@@ -61,21 +54,12 @@ final class AppState: ObservableObject {
         }
         guard shouldProceed else { return }
 
-        // Capture mutable state on main thread before going async
-        let (username, password, cutoff) = await MainActor.run {
-            (self.username, self.appPassword, self.lastActivityVisit)
-        }
+        let (username, password) = await MainActor.run { (self.username, self.appPassword) }
 
         do {
-            let logs = try await api.fetchActivityLogs(
-                username: username, password: password, perPage: 50, silent: true
-            )
-            let count = logs.filter { log in
-                guard let date = Self.parseWPDate(log.date) else { return false }
-                return date.timeIntervalSince1970 > cutoff
-            }.count
+            let profile = try await api.fetchMemberProfile(username: username, password: password)
             await MainActor.run {
-                self.newPostCount = count
+                self.newPostCount = profile.newActivityCount ?? 0
                 self.lastError = nil
                 self.isLoading = false
             }
@@ -91,7 +75,6 @@ final class AppState: ObservableObject {
     func openActivityFeedAndReset() {
         NSWorkspace.shared.open(URL(string: "https://www.creativeapplications.net/activity/")!)
         newPostCount = 0
-        lastActivityVisit = Date().timeIntervalSince1970
 
         // Stamp visit on server (fetch without silent=1)
         let (u, p) = (username, appPassword)
@@ -115,20 +98,6 @@ final class AppState: ObservableObject {
     private func stopTimer() {
         timer?.invalidate()
         timer = nil
-    }
-
-    // MARK: - Date parsing
-
-    // WP returns "yyyy-MM-dd'T'HH:mm:ss" without timezone — treat as UTC
-    private static func parseWPDate(_ string: String) -> Date? {
-        let iso = ISO8601DateFormatter()
-        if let date = iso.date(from: string) { return date }
-
-        let df = DateFormatter()
-        df.locale = Locale(identifier: "en_US_POSIX")
-        df.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-        df.timeZone = TimeZone(abbreviation: "UTC")
-        return df.date(from: string)
     }
 
     // MARK: - Persistence
