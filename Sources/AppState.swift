@@ -9,7 +9,7 @@ final class AppState: ObservableObject {
 
     private(set) var username: String = ""
     private(set) var appPassword: String = ""
-    private(set) var refreshIntervalMinutes: Int = 5
+    private(set) var refreshIntervalMinutes: Int = 10
 
     private var timer: Timer?
     private let api = APIClient()
@@ -99,7 +99,7 @@ final class AppState: ObservableObject {
     private func loadSettings() {
         username = UserDefaults.standard.string(forKey: "can_username") ?? ""
         let saved = UserDefaults.standard.integer(forKey: "can_refreshInterval")
-        refreshIntervalMinutes = saved > 0 ? saved : 5
+        refreshIntervalMinutes = saved > 0 ? saved : 10
         if !username.isEmpty {
             appPassword = KeychainHelper.load() ?? ""
         }

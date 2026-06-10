@@ -5,9 +5,9 @@ struct SettingsView: View {
 
     @State private var username = ""
     @State private var password = ""
-    @State private var intervalMinutes = 5
+    @State private var intervalMinutes = 10
 
-    private let intervals = [1, 2, 5, 10, 15, 30, 60]
+    private let intervals = [10, 15, 30, 60]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {

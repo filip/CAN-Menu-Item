@@ -89,6 +89,9 @@ This app uses the [CAN Member API](CAN-API.md). See `CAN-API.md` for full docume
 
 ## Version History
 
+### v1.2 (build 3) *(WIP)*
+- Minimum polling interval raised to 10 minutes.
+
 ### v1.1 (build 2) — 2026-04-16
 - New-post count now reads `newActivityCount` directly from the member profile API — same source of truth as the website dot and iOS app. Eliminates local date comparison and feed polling for count.
 - Fixed: count was always 0 due to server `last_activity_visit` timestamp being stored in local time instead of UTC (`current_time('timestamp')` → `time()` on server).
